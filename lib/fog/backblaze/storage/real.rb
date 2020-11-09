@@ -583,8 +583,11 @@ class Fog::Backblaze::Storage::Real
     logger.info("    Done #{method.to_s.upcase} #{url} = #{status} (#{(Time.now.to_f - start_time).round(3)} sec)")
     if http_response
       logger.debug("    Headers: #{http_response.headers}")
-      if method != :head && http_response.headers['Content-Type'].to_s !~ %r{^image/}
-        logger.debug("    Body: #{http_response.body}")
+      if http_response.body.size > 300
+        content_type = (http_response.headers['Content-Type'] || "").to_s 
+        if method != :head && content_type !~ %r{^(image|audio|video)/} && content_type !~ %r{/mp4$}
+          logger.debug("    Body: #{http_response.body}")
+        end
       end
     end
   end
