@@ -533,7 +533,7 @@ class Fog::Backblaze::Storage::Real
 
   def b2_command(command, options = {})
     ### UNLESS specidied, we turn off persistence
-    options[:persistent] = true unless options.has_key?(:persistent)
+    options[:persistent] = false unless options.has_key?(:persistent)
     auth_response = self.auth_response
     options[:headers] ||= {}
     options[:headers]['Authorization'] ||= auth_response['authorizationToken']
