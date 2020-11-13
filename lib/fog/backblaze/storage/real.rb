@@ -532,6 +532,8 @@ class Fog::Backblaze::Storage::Real
   end
 
   def b2_command(command, options = {})
+    ### UNLESS specidied, we turn off persistence
+    options[:persistent] = true unless options.has_key?(:persistent)
     auth_response = self.auth_response
     options[:headers] ||= {}
     options[:headers]['Authorization'] ||= auth_response['authorizationToken']
@@ -584,7 +586,7 @@ class Fog::Backblaze::Storage::Real
     if http_response
       logger.debug("    Headers: #{http_response.headers}")
       if http_response.body.size > 300
-        content_type = (http_response.headers['Content-Type'] || "").to_s 
+        content_type = (http_response.headers['Content-Type'] || "").to_s
         if method != :head && content_type !~ %r{^(image|audio|video)/} && content_type !~ %r{/mp4$}
           logger.debug("    Body: #{http_response.body}")
         end
